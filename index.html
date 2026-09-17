@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>D//DETECTIVE</title>
+
+<link rel="manifest" href="/GAME/manifest.webmanifest">
+<meta name="theme-color" content="#05070a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="D//DETECTIVE">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:#05070a;
+  color:#eaf6ff;
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(0,180,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,180,255,.035) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+  z-index:-1;
+}
+
+.joktan-logo{
+  position:fixed;
+  top:14px;
+  right:14px;
+  width:58px;
+  height:58px;
+  object-fit:contain;
+  z-index:9999;
+  border-radius:14px;
+  filter:drop-shadow(0 0 10px rgba(0,190,255,.75));
+}
+
+.container{
+  width:min(100%,900px);
+  margin:auto;
+  padding:30px 18px 70px;
+}
+
+.screen{
+  display:none;
+  animation:fade .35s ease;
+}
+
+.screen.active{
+  display:block;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.logo{
+  text-align:center;
+  margin-top:35px;
+}
+
+.logo h1{
+  font-size:clamp(38px,11vw,75px);
+  letter-spacing:8px;
+  font-weight:900;
+  color:#fff;
+  text-shadow:
+    0 0 8px #00aaff,
+    0 0 25px rgba(0,170,255,.6);
+}
+
+.logo span{
+  color:#00bfff;
+}
+
+.subtitle{
+  text-align:center;
+  color:#7292a5;
+  letter-spacing:4px;
+  font-size:11px;
+  margin-top:10px;
+}
+
+.panel{
+  margin-top:30px;
+  padding:24px;
+  background:rgba(8,15,21,.88);
+  border:1px solid rgba(0,180,255,.25);
+  border-radius:18px;
+  box-shadow:
+    0 0 30px rgba(0,150,255,.06),
+    inset 0 0 25px rgba(0,150,255,.025);
+}
+
+.panel h2{
+  color:#00bfff;
+  font-size:18px;
+  letter-spacing:3px;
+  margin-bottom:12px;
+}
+
+.panel p{
+  color:#9bb2c1;
+  line-height:1.7;
+  font-size:14px;
+}
+
+input,select{
+  width:100%;
+  padding:15px;
+  margin-top:18px;
+  background:#020508;
+  border:1px solid #16445c;
+  border-radius:10px;
+  color:#fff;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:#00bfff;
+  box-shadow:0 0 12px rgba(0,191,255,.15);
+}
+
+button{
+  width:100%;
+  padding:15px;
+  margin-top:14px;
+  border:1px solid #00bfff;
+  border-radius:10px;
+  background:#06131b;
+  color:#00c8ff;
+  font-weight:bold;
+  letter-spacing:2px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  background:#00bfff;
+  color:#020508;
+  box-shadow:0 0 20px rgba(0,191,255,.35);
+}
+
+button.secondary{
+  border-color:#294250;
+  color:#9bb2c1;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+  padding-right:65px;
+}
+
+.badge{
+  display:inline-block;
+  border:1px solid #16445c;
+  padding:7px 10px;
+  border-radius:8px;
+  color:#6e9db3;
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+.timer{
+  color:#00c8ff;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.case-title{
+  font-size:28px;
+  letter-spacing:3px;
+  margin-bottom:10px;
+}
+
+.case-title span{
+  color:#00bfff;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+
+.card{
+  background:#080f15;
+  border:1px solid #173646;
+  border-radius:14px;
+  padding:18px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.card:hover{
+  border-color:#00bfff;
+  transform:translateY(-2px);
+  box-shadow:0 0 15px rgba(0,191,255,.12);
+}
+
+.card .icon{
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+.card h3{
+  font-size:13px;
+  letter-spacing:1px;
+}
+
+.card p{
+  margin-top:6px;
+  font-size:11px;
+  color:#66808f;
+}
+
+.evidence{
+  margin-top:14px;
+  padding:16px;
+  border-left:3px solid #00bfff;
+  background:#070d12;
+  color:#a9c0cd;
+  line-height:1.6;
+  font-size:13px;
+}
+
+.suspect{
+  padding:18px;
+  margin-top:12px;
+  background:#070d12;
+  border:1px solid #173646;
+  border-radius:13px;
+}
+
+.suspect h3{
+  color:#00c8ff;
+  letter-spacing:2px;
+}
+
+.suspect small{
+  color:#607b8b;
+}
+
+.suspect p{
+  margin-top:9px;
+  font-size:13px;
+  line-height:1.6;
+  color:#9bb2c1;
+}
+
+.terminal{
+  background:#020405;
+  border:1px solid #16445c;
+  border-radius:12px;
+  padding:18px;
+  color:#35ff9b;
+  font-family:monospace;
+  font-size:12px;
+  line-height:1.8;
+  margin-top:15px;
+  overflow:auto;
+}
+
+.message{
+  background:#0a1218;
+  border-radius:12px;
+  padding:15px;
+  margin-top:10px;
+  border:1px solid #173646;
+}
+
+.message .sender{
+  color:#00bfff;
+  font-size:11px;
+  letter-spacing:1px;
+}
+
+.message .text{
+  color:#c1d1da;
+  margin-top:7px;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.warning{
+  border:1px solid #6b4d15;
+  background:rgba(80,55,5,.12);
+  color:#d9b75d;
+  padding:15px;
+  border-radius:10px;
+  margin-top:15px;
+  font-size:12px;
+  line-height:1.6;
+}
+
+.success{
+  border:1px solid #176442;
+  background:rgba(0,100,60,.1);
+  color:#52e6a1;
+  padding:15px;
+  border-radius:10px;
+  margin-top:15px;
+  font-size:12px;
+  line-height:1.6;
+}
+
+.rank{
+  text-align:center;
+  font-size:28px;
+  color:#00c8ff;
+  font-weight:900;
+  letter-spacing:3px;
+  margin:20px 0;
+}
+
+.score{
+  text-align:center;
+  font-size:50px;
+  font-weight:900;
+}
+
+.center{
+  text-align:center;
+}
+
+.muted{
+  color:#607b8b;
+  font-size:12px;
+}
+
+.progress{
+  width:100%;
+  height:5px;
+  background:#0b151c;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.progress div{
+  height:100%;
+  width:0%;
+  background:#00bfff;
+  transition:.3s;
+}
+
+.footer{
+  text-align:center;
+  margin-top:35px;
+  color:#304854;
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+@media(max-width:600px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    padding:18px;
+  }
+
+  .logo{
+    margin-top:70px;
+  }
+
+  .topbar{
+    align-items:flex-start;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- JOKTAN BRAND LOGO -->
+<img
+  src="312F3FD1-2D9B-4628-80A8-0AEBF27E5A01.png"
+  class="joktan-logo"
+  alt="Joktan Logo"
+>
+
+<div class="container">
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="screen active">
+
+  <div class="logo">
+    <h1>D//<span>DETECTIVE</span></h1>
+    <div class="subtitle">DIGITAL INVESTIGATION SYSTEM</div>
+  </div>
+
+  <div class="panel">
+
+    <h2>WELCOME, DETECTIVE</h2>
+
+    <p>
+      Enter the network. Investigate evidence, examine suspects,
+      decrypt messages and uncover the truth.
+    </p>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="ENTER YOUR EMAIL"
+      autocomplete="email"
+    >
+
+    <button onclick="joinNetwork()">
+      ENTER NETWORK
+    </button>
+
+    <div id="joinStatus"></div>
+
+  </div>
+
+  <div class="footer">
+    SYSTEM CREATED BY JOKTAN
+  </div>
+
+</section>
+
+
+<!-- ================= CASE HUB ================= -->
+
+<section id="hub" class="screen">
+
+  <div class="topbar">
+    <div class="badge">NETWORK // ONLINE</div>
+    <div class="timer" id="hubTimer">10:00</div>
+  </div>
+
+  <div class="panel">
+
+    <div class="case-title">
+      CASE_001 — <span>THE MISSING FILE</span>
+    </div>
+
+    <p>
+      A confidential digital file disappeared from a secure system.
+      Five people had access. One of them is lying.
+    </p>
+
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card" onclick="openScreen('evidence')">
+      <div class="icon">🗂️</div>
+      <h3>EVIDENCE</h3>
+      <p>Examine recovered evidence.</p>
+    </div>
+
+    <div class="card" onclick="openScreen('suspects')">
+      <div class="icon">👤</div>
+      <h3>SUSPECTS</h3>
+      <p>Study the five profiles.</p>
+    </div>
+
+    <div class="card" onclick="openScreen('messages')">
+      <div class="icon">💬</div>
+      <h3>MESSAGES</h3>
+      <p>Recover the hidden conversation.</p>
+    </div>
+
+    <div class="card" onclick="openScreen('terminal')">
+      <div class="icon">⌨️</div>
+      <h3>TERMINAL</h3>
+      <p>Inspect the system trace.</p>
+    </div>
+
+  </div>
+
+  <div class="panel">
+
+    <h2>MISSION</h2>
+
+    <p>
+      Identify who accessed the file, determine how it disappeared,
+      and submit your final accusation.
+    </p>
+
+    <button onclick="openScreen('puzzle')">
+      ACCESS CODE PUZZLE
+    </button>
+
+    <button class="secondary" onclick="openScreen('accusation')">
+      FINAL ACCUSATION
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================= EVIDENCE ================= -->
+
+<section id="evidence" class="screen">
+
+  <div class="topbar">
+    <div class="badge">EVIDENCE DATABASE</div>
+    <div class="timer" id="evidenceTimer">10:00</div>
+  </div>
+
+  <div class="panel">
+
+    <h2>RECOVERED EVIDENCE</h2>
+
+    <div class="evidence">
+      <b>EVIDENCE 01 — ACCESS LOG</b><br>
+      The missing file was opened at 02:14 AM.
+      The access originated from Terminal 04.
+    </div>
+
+    <div class="evidence">
+      <b>EVIDENCE 02 — SECURITY CAMERA</b><br>
+      Camera footage shows someone entering the restricted
+      corridor shortly before the disappearance.
+    </div>
+
+    <div class="evidence">
+      <b>EVIDENCE 03 — USB TRACE</b><br>
+      A removable device was connected to Terminal 04
+      at 02:16 AM.
+    </div>
+
+    <div class="evidence">
+      <b>EVIDENCE 04 — SYSTEM MESSAGE</b><br>
+      A hidden command was executed immediately after
+      the file was copied.
+    </div>
+
+    <div class="evidence">
+      <b>EVIDENCE 05 — SECURITY BADGE</b><br>
+      The badge used to enter the corridor was registered
+      to an authorized staff member.
+    </div>
+
+    <div class="evidence">
+      <b>EVIDENCE 06 — DELETED FILE</b><br>
+      The file was not permanently destroyed.
+      It was transferred to an encrypted location.
+    </div>
+
+    <button onclick="openScreen('hub')">
+      RETURN TO CASE
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================= SUSPECTS ================= -->
+
+<section id="suspects" class="screen">
+
+  <div class="topbar">
+    <div class="badge">PERSONS OF INTEREST</div>
+  </div>
+
+  <div class="panel">
+
+    <h2>FIVE SUSPECTS</h2>
+
+    <div class="suspect">
+      <h3>JOKTAN</h3>
+      <small>SECURITY / SYSTEM ACCESS</small>
+      <p>
+        Had knowledge of the building's security procedures.
+        Claims he was away from Terminal 04 during the incident.
+      </p>
+    </div>
+
+    <div class="suspect">
+      <h3>ROY</h3>
+      <small>IT SUPPORT</small>
+      <p>
+        Has technical knowledge and could potentially access
+        encrypted files. Says he was repairing another workstation.
+      </p>
+    </div>
+
+    <div class="suspect">
+      <h3>KINUTHIA</h3>
+      <small>ADMINISTRATION</small>
+      <p>
+        Had legitimate access to several confidential documents.
+        Claims he left before midnight.
+      </p>
+    </div>
+
+    <div class="suspect">
+      <h3>MAYA</h3>
+      <small>PROJECT MANAGER</small>
+      <p>
+        Was responsible for the missing file.
+        Says she never entered the restricted corridor.
+      </p>
+    </div>
+
+    <div class="suspect">
+      <h3>KYLA</h3>
+      <small>CONTRACTOR</small>
+      <p>
+        Had a temporary security badge and was seen
+        near the building shortly before the incident.
+      </p>
+    </div>
+
+    <button onclick="openScreen('hub')">
+      RETURN TO CASE
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================= MESSAGES ================= -->
+
+<section id="messages" class="screen">
+
+  <div class="topbar">
+    <div class="badge">RECOVERED COMMUNICATION</div>
+  </div>
+
+  <div class="panel">
+
+    <h2>DECRYPTED CHAT</h2>
+
+    <div class="message">
+      <div class="sender">UNKNOWN → ROY</div>
+      <div class="text">
+        "The file has to disappear before morning."
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="sender">ROY → UNKNOWN</div>
+      <div class="text">
+        "I'm not touching it. You said you already handled it."
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="sender">UNKNOWN → ROY</div>
+      <div class="text">
+        "Then make sure nobody checks Terminal 04."
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="sender">SYSTEM</div>
+      <div class="text">
+        Deleted message recovered: "02:14. Same route."
+      </div>
+    </div>
+
+    <div class="warning">
+      WARNING: Message timestamps indicate communication
+      immediately before the access event.
+    </div>
+
+    <button onclick="openScreen('hub')">
+      RETURN TO CASE
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================= TERMINAL ================= -->
+
+<section id="terminal" class="screen">
+
+  <div class="topbar">
+    <div class="badge">SECURE TERMINAL</div>
+  </div>
+
+  <div class="panel">
+
+    <h2>SYSTEM TRACE</h2>
+
+    <div class="terminal">
+      > connecting to forensic node...<br>
+      > connection established<br><br>
+
+      [02:13:58] USER LOGIN: ACTIVE<br>
+      [02:14:03] FILE ACCESS: CONFIDENTIAL_07<br>
+      [02:14:19] COPY OPERATION: USB_DEVICE<br>
+      [02:15:02] ENCRYPTION MODULE: ENABLED<br>
+      [02:16:11] FILE LOCATION: REMOTE_NODE<br>
+      [02:17:44] LOG DELETION ATTEMPT<br><br>
+
+      > forensic recovery successful<br>
+      > suspicious command detected<br>
+      > ACCESS KEY REQUIRED
+    </div>
+
+    <input
+      type="text"
+      id="terminalCode"
+      placeholder="ENTER ACCESS KEY"
+    >
+
+    <button onclick="checkTerminal()">
+      EXECUTE
+    </button>
+
+    <div id="terminalResult"></div>
+
+    <button class="secondary" onclick="openScreen('hub')">
+      RETURN TO CASE
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================= PUZZLE ================= -->
+
+<section id="puzzle" class="screen">
+
+  <div class="panel">
+
+    <h2>ACCESS CODE PUZZLE</h2>
+
+    <p>
+      The forensic system recovered the following clue:
+    </p>
+
+    <div class="terminal">
+      O = 15<br>
+      R = 18<br>
+      I = 9<br>
+      O = 15<br>
+      N = 14<br><br>
+
+      SYSTEM NOTE:<br>
+      "Use the constellation name followed by the final number."
+    </div>
+
+    <input
+      type="text"
+      id="puzzleCode"
+      placeholder="ENTER CODE"
+    >
+
+    <button onclick="solvePuzzle()">
+      DECRYPT
+    </button>
+
+    <div id="puzzleResult"></div>
+
+    <button class="secondary" onclick="openScreen('hub')">
+      RETURN TO CASE
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================= ACCUSATION ================= -->
+
+<section id="accusation" class="screen">
+
+  <div class="panel">
+
+    <h2>FINAL ACCUSATION</h2>
+
+    <p>
+      You have reviewed the evidence.
+      Who do you believe accessed and moved the missing file?
+    </p>
+
+    <select id="accused">
+      <option value="">SELECT SUSPECT</option>
+      <option value="JOKTAN">JOKTAN</option>
+      <option value="ROY">ROY</option>
+      <option value="KINUTHIA">KINUTHIA</option>
+      <option value="MAYA">MAYA</option>
+      <option value="KYLA">KYLA</option>
+    </select>
+
+    <button onclick="submitAccusation()">
+      SUBMIT ACCUSATION
+    </button>
+
+    <div id="accusationResult"></div>
+
+    <button class="secondary" onclick="openScreen('hub')">
+      RETURN TO CASE
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ================= RESULT ================= -->
+
+<section id="result" class="screen">
+
+  <div class="panel center">
+
+    <div class="badge">CASE CLOSED</div>
+
+    <div class="score" id="finalScore">
+      0%
+    </div>
+
+    <div class="rank" id="finalRank">
+      ROOKIE DETECTIVE
+    </div>
+
+    <p id="finalMessage"></p>
+
+    <button onclick="location.reload()">
+      NEW INVESTIGATION
+    </button>
+
+  </div>
+
+</section>
+
+
+</div>
+
+
+<script>
+
+let score = 0;
+let discoveries = 0;
+let timeLeft = 600;
+let timerStarted = false;
+let timerInterval = null;
+
+const TOTAL_DISCOVERIES = 4;
+
+function openScreen(id){
+
+  document.querySelectorAll(".screen").forEach(screen=>{
+    screen.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  updateProgress();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  if(id !== "home"){
+    startTimer();
+  }
+}
+
+
+function startTimer(){
+
+  if(timerStarted) return;
+
+  timerStarted = true;
+
+  timerInterval = setInterval(()=>{
+
+    timeLeft--;
+
+    updateTimers();
+
+    if(timeLeft <= 0){
+
+      clearInterval(timerInterval);
+
+      alert("TIME EXPIRED. CASE CLOSED.");
+
+      finishCase(false);
+
+    }
+
+  },1000);
+}
+
+
+function updateTimers(){
+
+  let minutes = Math.floor(timeLeft / 60);
+  let seconds = timeLeft % 60;
+
+  let display =
+    String(minutes).padStart(2,"0") +
+    ":" +
+    String(seconds).padStart(2,"0");
+
+  document.querySelectorAll(".timer").forEach(el=>{
+    el.textContent = display;
+  });
+}
+
+
+function updateProgress(){
+
+  let percent =
+    Math.min(
+      100,
+      (discoveries / TOTAL_DISCOVERIES) * 100
+    );
+
+  document.getElementById("progressBar").style.width =
+    percent + "%";
+}
+
+
+function joinNetwork(){
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const status =
+    document.getElementById("joinStatus");
+
+  if(!email || !email.includes("@")){
+
+    status.innerHTML =
+      '<div class="warning">ENTER A VALID EMAIL ADDRESS.</div>';
+
+    return;
+  }
+
+  localStorage.setItem("detective_email",email);
+
+  status.innerHTML =
+    '<div class="success">NETWORK ACCESS GRANTED.</div>';
+
+  /*
+   * EMAIL COLLECTION
+   * Your Formspree endpoint
+   */
+
+  fetch("https://formspree.io/f/myezyerr",{
+
+    method:"POST",
+
+    headers:{
+      "Accept":"application/json",
+      "Content-Type":"application/json"
+    },
+
+    body:JSON.stringify({
+
+      email:email,
+
+      event:"DIGITAL DETECTIVE - joined network",
+
+      source:"digital-detective"
+
+    })
+
+  }).catch(()=>{});
+
+  setTimeout(()=>{
+    openScreen("hub");
+  },700);
+}
+
+
+function checkTerminal(){
+
+  const code =
+    document
+      .getElementById("terminalCode")
+      .value
+      .trim()
+      .toUpperCase();
+
+  const result =
+    document.getElementById("terminalResult");
+
+  if(code === "ORION14"){
+
+    result.innerHTML =
+      '<div class="success">ACCESS GRANTED — HIDDEN TRACE RECOVERED.</div>';
+
+    if(!localStorage.getItem("terminalSolved")){
+
+      localStorage.setItem("terminalSolved","yes");
+
+      score += 20;
+      discoveries++;
+
+      updateProgress();
+    }
+
+  }else{
+
+    result.innerHTML =
+      '<div class="warning">ACCESS DENIED — INVALID KEY.</div>';
+
+  }
+
+}
+
+
+function solvePuzzle(){
+
+  const code =
+    document
+      .getElementById("puzzleCode")
+      .value
+      .trim()
+      .toUpperCase();
+
+  const result =
+    document.getElementById("puzzleResult");
+
+  if(code === "ORION14"){
+
+    result.innerHTML =
+      '<div class="success">PUZZLE SOLVED — THE CONSTELLATION TRACE IS CONFIRMED.</div>';
+
+    if(!localStorage.getItem("puzzleSolved")){
+
+      localStorage.setItem("puzzleSolved","yes");
+
+      score += 20;
+      discoveries++;
+
+      updateProgress();
+    }
+
+  }else{
+
+    result.innerHTML =
+      '<div class="warning">INCORRECT CODE. THE SYSTEM REMAINS LOCKED.</div>';
+
+  }
+
+}
+
+
+function inspectEvidence(){
+
+  if(!localStorage.getItem("evidenceFound")){
+
+    localStorage.setItem("evidenceFound","yes");
+
+    score += 20;
+    discoveries++;
+
+    updateProgress();
+
+  }
+
+}
+
+
+/*
+ * Count investigation sections as discoveries
+ */
+
+document
+  .querySelectorAll("#evidence .evidence")
+  .forEach(item=>{
+
+    item.addEventListener("click",inspectEvidence);
+
+  });
+
+
+document
+  .querySelectorAll("#messages .message")
+  .forEach(item=>{
+
+    item.addEventListener("click",()=>{
+
+      if(!localStorage.getItem("messagesFound")){
+
+        localStorage.setItem("messagesFound","yes");
+
+        score += 20;
+        discoveries++;
+
+        updateProgress();
+
+      }
+
+    });
+
+  });
+
+
+function submitAccusation(){
+
+  const accused =
+    document.getElementById("accused").value;
+
+  const result =
+    document.getElementById("accusationResult");
+
+  if(!accused){
+
+    result.innerHTML =
+      '<div class="warning">SELECT A SUSPECT FIRST.</div>';
+
+    return;
+
+  }
+
+  /*
+   * Fictional game solution
+   */
+
+  const correctSuspect = "ROY";
+
+  if(accused === correctSuspect){
+
+    score += 20;
+
+    result.innerHTML =
+      '<div class="success">CORRECT. ROY WAS CONNECTED TO THE OPERATION.</div>';
+
+  }else{
+
+    result.innerHTML =
+      '<div class="warning">INCORRECT ACCUSATION. THE EVIDENCE DOES NOT SUPPORT THIS SUSPECT.</div>';
+
+  }
+
+  setTimeout(()=>{
+
+    finishCase(accused === correctSuspect);
+
+  },1200);
+
+}
+
+
+function finishCase(correct){
+
+  if(timerInterval){
+    clearInterval(timerInterval);
+  }
+
+  let finalScore =
+    Math.min(100,score);
+
+  if(correct){
+    finalScore =
+      Math.min(100,finalScore);
+  }
+
+  let rank;
+
+  if(finalScore >= 90){
+
+    rank = "MASTER DETECTIVE";
+
+  }else if(finalScore >= 70){
+
+    rank = "SENIOR INVESTIGATOR";
+
+  }else if(finalScore >= 50){
+
+    rank = "FIELD INVESTIGATOR";
+
+  }else{
+
+    rank = "ROOKIE DETECTIVE";
+
+  }
+
+  document.getElementById("finalScore").textContent =
+    finalScore + "%";
+
+  document.getElementById("finalRank").textContent =
+    rank;
+
+  document.getElementById("finalMessage").textContent =
+    correct
+      ? "Case solved. Your investigation connected the evidence and identified the suspect."
+      : "The case remains unresolved. Review the evidence and try again.";
+
+  localStorage.setItem(
+    "detective_score",
+    finalScore
+  );
+
+  localStorage.setItem(
+    "detective_rank",
+    rank
+  );
+
+  /*
+   * Send result to Formspree
+   */
+
+  const email =
+    localStorage.getItem("detective_email");
+
+  fetch("https://formspree.io/f/myezyerr",{
+
+    method:"POST",
+
+    headers:{
+      "Accept":"application/json",
+      "Content-Type":"application/json"
+    },
+
+    body:JSON.stringify({
+
+      email:email || "unknown",
+
+      event:"DIGITAL DETECTIVE - case result",
+
+      score:finalScore,
+
+      rank:rank,
+
+      accusation:
+        document.getElementById("accused")
+        ? document.getElementById("accused").value
+        : "",
+
+      source:"digital-detective"
+
+    })
+
+  }).catch(()=>{});
+
+  openScreen("result");
+
+}
+
+
+updateTimers();
+
+
+/*
+ * PWA SERVICE WORKER
+ */
+
+if("serviceWorker" in navigator){
+
+  window.addEventListener("load",()=>{
+
+    navigator.serviceWorker
+      .register("/GAME/sw.js")
+
+      .then(()=>{
+        console.log(
+          "D//DETECTIVE SERVICE WORKER ONLINE"
+        );
+      })
+
+      .catch(err=>{
+        console.log(
+          "Service worker error:",
+          err
+        );
+      });
+
+  });
+
+}
+
+</script>
+
+</body>
+</html>
