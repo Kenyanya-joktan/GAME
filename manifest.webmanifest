@@ -1,0 +1,19 @@
+{
+  "name": "DIGITAL DETECTIVE",
+  "short_name": "D//DETECTIVE",
+  "description": "A futuristic digital detective mystery game created by Joktan.",
+  "start_url": "/GAME/",
+  "scope": "/GAME/",
+  "display": "standalone",
+  "background_color": "#05070a",
+  "theme_color": "#05070a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "312F3FD1-2D9B-4628-80A8-0AEBF27E5A01.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
