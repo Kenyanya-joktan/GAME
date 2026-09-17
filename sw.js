@@ -1,9 +1,10 @@
-const CACHE_NAME = "digital-detective-v1";
+const CACHE_NAME = "digital-detective-v2";
 
 const FILES_TO_CACHE = [
   "/GAME/",
   "/GAME/index.html",
-  "/GAME/manifest.webmanifest"
+  "/GAME/manifest.webmanifest",
+  "/GAME/312F3FD1-2D9B-4628-80A8-0AEBF27E5A01.png"
 ];
 
 self.addEventListener("install", event => {
